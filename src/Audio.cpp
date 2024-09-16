@@ -4012,7 +4012,7 @@ int Audio::findNextSync(uint8_t* data, size_t len){
 }
 //---------------------------------------------------------------------------------------------------------------------
 int Audio::sendBytes(uint8_t* data, size_t len) {
-    int bytesLeft;
+    int32_t bytesLeft;
     static bool f_setDecodeParamsOnce = true;
     int nextSync = 0;
     if(!m_f_playing) {
@@ -4031,9 +4031,9 @@ int Audio::sendBytes(uint8_t* data, size_t len) {
                              if(getBitsPerSample() == 16) m_validSamples = len / (2 * getChannels());
                              if(getBitsPerSample() == 8 ) m_validSamples = len / 2;
                              bytesLeft = 0; break;
-        case CODEC_MP3:      ret = MP3Decode(data, &bytesLeft, m_outBuff, 0); break;
-        case CODEC_AAC:      ret = AACDecode(data, &bytesLeft, m_outBuff);    break;
-        case CODEC_M4A:      ret = AACDecode(data, &bytesLeft, m_outBuff);    break;
+        case CODEC_MP3:      ret = MP3Decode(data, (int*)&bytesLeft, m_outBuff, 0); break;
+        case CODEC_AAC:      ret = AACDecode(data, (int*)&bytesLeft, m_outBuff);    break;
+        case CODEC_M4A:      ret = AACDecode(data, (int*)&bytesLeft, m_outBuff);    break;
         case CODEC_FLAC:     ret = FLACDecode(data, &bytesLeft, m_outBuff);   break;
         case CODEC_OGG_FLAC: ret = FLACDecode(data, &bytesLeft, m_outBuff);   break; // FLAC webstream wrapped in OGG
         default: {log_e("no valid codec found codec = %d", m_codec); stopSong();}
